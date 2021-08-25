@@ -14,14 +14,14 @@ namespace Todo.Insfrastructure.Persistence
     {
         public TodoDbContext CreateDbContext(string[] args)
         {
-            //var configuration = new ConfigurationBuilder()
-            //           .SetBasePath(Directory.GetCurrentDirectory())
-            //           .AddJsonFile("appsettings.Development.json")
-            //           .Build();
+            var configuration = new ConfigurationBuilder()
+                       .SetBasePath(Directory.GetCurrentDirectory())
+                       .AddJsonFile("appsettings.json")
+                       .Build();
 
             var optionsBuilder = new DbContextOptionsBuilder<TodoDbContext>();
-            //var configurationSection = configuration.GetSection("ConnectionStrings:DefaultConnection");
-            optionsBuilder.UseSqlServer("Server=(local);Database=todoList2;Trusted_Connection=True;MultipleActiveResultSets=true");
+            var connectionString = configuration.GetConnectionString("DefaultConnection");
+            optionsBuilder.UseSqlServer(connectionString);
 
             return new TodoDbContext(optionsBuilder.Options);
         }

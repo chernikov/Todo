@@ -11,15 +11,15 @@ namespace Todo.Insfrastructure
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
+            
             if (configuration.GetValue<bool>("UseInMemoryDatabase"))
             {
-                services.AddDbContext<TodoDbContext>(options =>
-                    options.UseInMemoryDatabase("TodoDb"));
+                services.AddDbContext<TodoDbContext>(options => options.UseInMemoryDatabase("TodoDb"));
             }
             else
             {
-                services.AddDbContext<TodoDbContext>(options =>
-                    options.UseSqlServer("Server=(local);Database=todoList2;Trusted_Connection=True;MultipleActiveResultSets=true"));
+                var connectionString = configuration.GetConnectionString("DefaultConnection");
+                services.AddDbContext<TodoDbContext>(options => options.UseSqlServer(connectionString));
             }
             services.AddScoped<TodoDbContext>(provider => provider.GetService<TodoDbContext>());
             services.AddScoped<ITodoDbContext, TodoDbContext>();
